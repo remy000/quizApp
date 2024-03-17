@@ -2,8 +2,6 @@ import React,{useState,useEffect} from 'react'
 import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { db } from '../firebaseConfig';
 import { collection,getDocs } from 'firebase/firestore';
-import { auth } from '../firebaseConfig';
-import { signOut } from 'firebase/auth';
 
 const QuizList = ({navigation}) => {
     const [quizzes, setQuizzes] = useState([]);
@@ -40,10 +38,7 @@ const QuizList = ({navigation}) => {
           <Text style={styles.quizDescription}>{item.description}</Text>
         </TouchableOpacity>
       );
-      const logout=()=>{
-        signOut(auth);
-        navigation.navigate('login');
-      }
+     
 
       return (
         <View style={styles.container}>

@@ -52,12 +52,14 @@ const Signup = ({navigation}) => {
         if(user.email==='admin@gmail.com'){
           setEmail(''),
           setPassword('')
+          sessionStorage.setItem('email', user.email);
          navigation.navigate('Home');
         }
         else{
           alert("you login as user");
-          setEmail(''),
-          setPassword('')
+          setEmail('');
+          setPassword('');
+          sessionStorage.setItem('email', user.email);
           navigation.navigate('User');
         }
       }
