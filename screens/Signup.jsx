@@ -4,6 +4,8 @@ import {createUserWithEmailAndPassword,signInWithEmailAndPassword } from "fireba
 import { MaterialIcons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig';
 import * as yup from 'yup'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 const Signup = ({navigation}) => {
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
@@ -48,18 +50,19 @@ const Signup = ({navigation}) => {
         const userCredential=await signInWithEmailAndPassword(auth,email,password);
         const user=userCredential.user;
         if(user){
-          setLoading(false)
+          setLoading(false);
+          const emails=user.email.toString();
+          AsyncStorage.setItem('email', emails);
         if(user.email==='admin@gmail.com'){
+          
           setEmail(''),
           setPassword('')
-          sessionStorage.setItem('email', user.email);
          navigation.navigate('Home');
         }
         else{
           alert("you login as user");
           setEmail('');
           setPassword('');
-          sessionStorage.setItem('email', user.email);
           navigation.navigate('User');
         }
       }

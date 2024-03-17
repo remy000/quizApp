@@ -71,6 +71,9 @@ const AdminHome = ({navigation}) => {
 
 
       }
+      const handleQuizSelect = (quizId) => {
+        navigation.navigate('QuizTaker', { quizId });
+      };
 
       const renderQuizItem = ({ item }) => (  
         <View style={styles.quizItem}>
@@ -78,7 +81,7 @@ const AdminHome = ({navigation}) => {
           <Text style={styles.quizTitle}>{item.title}</Text>
           </View>
           <View style={styles.icons}>
-          <AntDesign name="edit" size={27} color="white" />
+          <AntDesign name="edit" size={27} color="white"  onPress={()=>handleQuizSelect(item.id)}/>
           <TouchableOpacity onPress={()=>handleDelete(item.id)}> 
           <MaterialIcons name="delete" size={27} color="white"/>
           </TouchableOpacity>
