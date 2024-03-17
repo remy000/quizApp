@@ -10,6 +10,7 @@ import QuizResult from './screens/QuizResult';
 import SessionManager from './SessionManager';
 import AdminTab from './screens/AdminTab';
 import UserTab from './screens/UserTab';
+import UpdateQuiz from './screens/UpdateQuiz';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ export default function App() {
           <Stack.Screen name='User' component={UserTab} options={{headerShown:false}}/>
           <Stack.Screen name='QuizTaker' component={QuizTaker}/>
           <Stack.Screen name='QuizResult' component={QuizResult}/>
+          <Stack.Screen name='Update' component={UpdateQuiz}/>
 
         </Stack.Navigator>
     </SessionManager>

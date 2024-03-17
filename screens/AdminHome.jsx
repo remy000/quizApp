@@ -66,13 +66,16 @@ const AdminHome = ({navigation}) => {
         const response=await deleteDoc(doc(db,'quizzes',quizId))
         if(response){
             alert('quiz deleted');
-            await fetchQuizzes();
+            fetchQuizzes();
         }
 
 
       }
       const handleQuizSelect = (quizId) => {
-        navigation.navigate('QuizTaker', { quizId });
+        navigation.navigate('Update', { quizId });
+      };
+      const handleRefresh = () => {
+        fetchQuizzes();
       };
 
       const renderQuizItem = ({ item }) => (  
@@ -81,9 +84,9 @@ const AdminHome = ({navigation}) => {
           <Text style={styles.quizTitle}>{item.title}</Text>
           </View>
           <View style={styles.icons}>
-          <AntDesign name="edit" size={27} color="white"  onPress={()=>handleQuizSelect(item.id)}/>
+          <AntDesign name="edit" size={22} color="white"  onPress={()=>handleQuizSelect(item.id)}/>
           <TouchableOpacity onPress={()=>handleDelete(item.id)}> 
-          <MaterialIcons name="delete" size={27} color="white"/>
+          <MaterialIcons name="delete" size={22} color="white"/>
           </TouchableOpacity>
          
 
@@ -96,7 +99,12 @@ const AdminHome = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.admin}>Welcome, Admin</Text>
+      <View style={styles.titleHeader}>
+      <Text style={styles.admin}>Welcome, Admin</Text>
+        <Button title="⟲" onPress={handleRefresh} color='#00563B' />
+
+      </View>
+        
         <Button title='+' color='#00563B' onPress={()=>navigation.navigate('Admin')}></Button>
        
         {
@@ -121,6 +129,7 @@ const AdminHome = ({navigation}) => {
 
             )
         }
+        
           
         </View>
       );
@@ -135,6 +144,12 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 16,
       backgroundColor:'white',
+    },
+    titleHeader:{
+      display:'flex',
+      flexDirection:'row',
+      justifyContent:'space-between', 
+      alignItems:'center'
     },
     admin:{
         fontSize:25,
@@ -156,7 +171,7 @@ const styles = StyleSheet.create({
     icons:{
      display:"flex",
      flexDirection:'row',
-     marginLeft:160, 
+     marginLeft:120, 
      gap:20
 
     },
