@@ -6,27 +6,29 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {AppState} from 'react-native'
 
 const SessionManager = ({children}) => {
- const [user,setUser]=useState(null);
- const navigation=useNavigation();
- const SESSION_TIMEOUT_DURATION = 60* 60 * 1000;
+  const [user, setUser] = useState(null);
+  const navigation = useNavigation();
+  const SESSION_TIMEOUT_DURATION = 2 * 60 * 1000;
+  let backgroundTimer = null;
 
- useEffect(() => {
+  useEffect(() => {
     const checkSessionTimeout = async () => {
       try {
         const sessionStart = await AsyncStorage.getItem('sessionStart');
         const currentTime = Date.now();
+        const appState = AppState.currentState;
 
-        if (sessionStart) {
+        if (sessionStart && appState === 'active') {
           const elapsed = currentTime - parseInt(sessionStart, 10);
           if (elapsed > SESSION_TIMEOUT_DURATION) {
             signOut(auth);
-            AsyncStorage.removeItem('authToken');
-            AsyncStorage.removeItem('sessionStart');
+            await AsyncStorage.removeItem('authToken');
+            await AsyncStorage.removeItem('sessionStart');
             alert('Your session has timed out. Please log in again.');
             navigation.navigate('login');
-          } else {
-            AsyncStorage.setItem('sessionStart', currentTime.toString());
           }
+        } else {
+          AsyncStorage.setItem('sessionStart', currentTime.toString());
         }
       } catch (error) {
         console.error('Error checking session timeout:', error);
@@ -34,34 +36,38 @@ const SessionManager = ({children}) => {
     };
 
     const resetSessionTimeout = async () => {
-        try {
-          await AsyncStorage.setItem('sessionStart', Date.now().toString());
-        } catch (error) {
-          console.error('Error setting session start time:', error);
-        }
-      };
+      try {
+        await AsyncStorage.setItem('sessionStart', Date.now().toString());
+      } catch (error) {
+        console.error('Error setting session start time:', error);
+      }
+    };
 
     const handleAppStateChange = async (nextAppState) => {
-        if (nextAppState === 'active') {
+      if (nextAppState === 'background') {
+        backgroundTimer = setTimeout(() => {
           resetSessionTimeout();
-        }
-      };
-  
-     
-      const sessionTimeout = setInterval(checkSessionTimeout, SESSION_TIMEOUT_DURATION);
-      AppState.addEventListener('change', handleAppStateChange)
-      
-      return () => {
-        clearInterval(sessionTimeout);
-      };
+        }, SESSION_TIMEOUT_DURATION);
+      } else if (nextAppState === 'active') {
+        clearTimeout(backgroundTimer);
+      }
+    };
+
+    const sessionTimeout = setInterval(checkSessionTimeout, SESSION_TIMEOUT_DURATION);
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      clearInterval(sessionTimeout);
+      AppState.removeEventListener('change', handleAppStateChange);
+      clearTimeout(backgroundTimer); // Clear the background timer on unmount
+    };
   }, []);
 
- useEffect(() => {
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         AsyncStorage.setItem('authToken', currentUser.uid);
-        AsyncStorage.setItem('sessionStart', Date.now().toString());
       } else {
         setUser(null);
         AsyncStorage.removeItem('authToken');
@@ -71,11 +77,9 @@ const SessionManager = ({children}) => {
 
     return unsubscribe;
   }, []);
- return(
-    <>
-    {children}
-    </>
- )
-}
+
+  return <>{children}</>;
+};
+
 
 export default SessionManager

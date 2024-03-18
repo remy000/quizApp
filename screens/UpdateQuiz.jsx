@@ -1,6 +1,6 @@
 import {ActivityIndicator, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { collection,getFirestore, doc, getDoc, getDocs, updateDoc} from 'firebase/firestore';
+import { collection,getFirestore, doc, getDoc, getDocs, setDoc,} from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 const UpdateQuiz = ({ navigation, route }) => {
@@ -81,12 +81,12 @@ const UpdateQuiz = ({ navigation, route }) => {
   const handleUpdateQuiz = async () => {
     try {
       const quizRef = doc(db, 'quizzes', quizId);
-      await updateDoc(quizRef, { title: quiz.title });
+      await setDoc(quizRef, { title: quiz.title });
 
       const questionsRef = collection(db, 'quizzes', quizId, 'questions');
       quiz.questions.forEach(async (question, index) => {
         const questionRef = doc(questionsRef, `${index}`);
-        await updateDoc(questionRef, { question: question.question, options: question.options, correctOption: question.correctOption });
+        await setDoc(questionRef, { question: question.question, options: question.options, correctOption: question.correctOption });
       });
 
       console.log('Quiz updated successfully!');
@@ -144,7 +144,7 @@ const UpdateQuiz = ({ navigation, route }) => {
               </View>
             ))}
             <View style={styles.buttons}>
-              <Button title="Update" onPress={handleUpdateQuiz} />
+              <Button title="Update" onPress={handleUpdateQuiz}  color="#00563B"/>
             </View>
           </>
         ) : (

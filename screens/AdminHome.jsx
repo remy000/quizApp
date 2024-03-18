@@ -4,8 +4,7 @@ import { db } from '../firebaseConfig';
 import { collection,getDocs,doc,deleteDoc } from 'firebase/firestore';
 import * as SQLite from 'expo-sqlite'
 import {useNetInfo} from '@react-native-community/netinfo';
-import { AntDesign } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign,MaterialIcons } from '@expo/vector-icons';
 
 
 const sqldb = SQLite.openDatabase('quiz.db');
@@ -84,7 +83,7 @@ const AdminHome = ({navigation}) => {
           <Text style={styles.quizTitle}>{item.title}</Text>
           </View>
           <View style={styles.icons}>
-          <AntDesign name="edit" size={22} color="white"  onPress={()=>handleQuizSelect(item.id)}/>
+          <MaterialIcons name="edit-document" size={22} color="white"onPress={()=>handleQuizSelect(item.id)}/>
           <TouchableOpacity onPress={()=>handleDelete(item.id)}> 
           <MaterialIcons name="delete" size={22} color="white"/>
           </TouchableOpacity>
