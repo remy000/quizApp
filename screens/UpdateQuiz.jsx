@@ -45,6 +45,8 @@ const UpdateQuiz = ({ navigation, route }) => {
     }));
   };
 
+
+  
   const handleQuestionTextChange = (newText, questionIndex) => {
     setQuiz((prevQuiz) => {
       const updatedQuestions = [...prevQuiz.questions];

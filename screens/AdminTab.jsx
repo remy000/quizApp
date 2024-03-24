@@ -4,6 +4,7 @@ import UserHome from './UserHome';
 import AdminHome from './AdminHome';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import Location from './Location';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +33,15 @@ const AdminTab = () => {
         ),
         headerShown: false,
       }}
+    
+    />
+    <Tab.Screen name='location' component={Location}
+    options={{
+      tabBarIcon:()=>(
+        <Entypo name="location" size={30} color="#00563B" />
+      ),
+      
+    }}
     
     />
 

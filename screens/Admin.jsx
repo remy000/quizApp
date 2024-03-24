@@ -19,8 +19,8 @@ const Admin = ({navigation}) => {
    
     useEffect(() => {
       setUpDatabase();
-      if(netInfo.isConnected){
-         syncOfflineQuizzes();
+       if(netInfo.isConnected){
+        syncOfflineQuizzes();
       }
     }, [netInfo.isConnected]);
 
@@ -47,7 +47,7 @@ const Admin = ({navigation}) => {
                   correctOption: question.correctOption
                 });
               }
-              console.log("Quiz saved successfully");
+              alert("Quiz saved successfully in firebase");
             } catch (error) {
               console.error("Failed to save quiz online:", error);
             }
@@ -85,7 +85,7 @@ const Admin = ({navigation}) => {
                         }
                       );
                     }
-                    console.log('Quiz saved successfully');
+                    alert('Quiz saved successfully in SQLite');
                   },
                   (_, error) => {
                     console.error('Failed to save quiz:', error);
@@ -117,6 +117,7 @@ const Admin = ({navigation}) => {
                 const existingQuiz = querySnapshot.docs.find(doc => doc.data().title === quiz.title);
           
                 if (!existingQuiz) {
+                  console.log("quiz not found");
                   const questionsQueryResult = await new Promise((resolve, reject) => {
                     sqldb.transaction(tx => {
                       tx.executeSql(
