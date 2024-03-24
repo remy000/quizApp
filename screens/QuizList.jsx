@@ -2,13 +2,27 @@ import React,{useState,useEffect} from 'react'
 import { ActivityIndicator, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { db } from '../firebaseConfig';
 import { collection,getDocs } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import NotificationScreen from './NotificationScreen';
 
 const QuizList = ({navigation}) => {
     const [quizzes, setQuizzes] = useState([]);
     const [loading,setLoading]=useState(false);
+    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
       fetchQuizzes();
+      AsyncStorage.getItem("newQuizSaved").then(isNewQuizSaved => {
+        if (isNewQuizSaved === "true") {
+          setShowNotification(true);
+          setTimeout(() => {
+            setShowNotification(false);
+            AsyncStorage.removeItem("newQuizSaved");
+          }, 4000);
+        }
+      }).catch(error => {
+        console.error("Failed to retrieve newQuizSaved from AsyncStorage:", error);
+      });
     }, []);
 
     const fetchQuizzes = async () => {
@@ -42,6 +56,17 @@ const QuizList = ({navigation}) => {
 
       return (
         <View style={styles.container}>
+          {
+            showNotification&&(
+              <NotificationScreen
+              message="New Quiz has been saved"
+              duration={4000}
+              onClose={()=>setShowNotification(false)}
+              
+              
+              />
+            )
+          }
        
         {
             loading?(
@@ -77,7 +102,7 @@ const QuizList = ({navigation}) => {
         alignItems: 'center',
         padding: 16,
         backgroundColor:'white',
-        marginTop:30
+        marginTop:40
       },
       quizItem: {
         marginBottom: 8,

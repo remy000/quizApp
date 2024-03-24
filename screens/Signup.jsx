@@ -60,7 +60,6 @@ const Signup = ({navigation}) => {
          navigation.navigate('Home');
         }
         else{
-          alert("you login as user");
           setEmail('');
           setPassword('');
           navigation.navigate('User');

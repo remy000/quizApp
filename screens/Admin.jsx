@@ -6,6 +6,8 @@ import { db } from '../firebaseConfig';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {Picker} from '@react-native-picker/picker'
 import { getFirestore } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 const sqldb = SQLite.openDatabase('quiz.db');
 
 
@@ -47,6 +49,7 @@ const Admin = ({navigation}) => {
                   correctOption: question.correctOption
                 });
               }
+              await AsyncStorage.setItem("newQuizSaved","true");
               alert("Quiz saved successfully in firebase");
             } catch (error) {
               console.error("Failed to save quiz online:", error);
@@ -77,7 +80,7 @@ const Admin = ({navigation}) => {
                         'INSERT INTO questions (quiz_id, question, options, correct_option) VALUES (?, ?, ?, ?)',
                         [insertId, question.question, JSON.stringify(question.options), question.correctOption],
                         (_, { insertId: questionInsertId }) => {
-                          console.log('Question saved successfully with ID:', questionInsertId);
+                          ('Question saved successfully with ID:', questionInsertId);
                         },
                         (_, error) => {
                           console.error('Failed to save question:', error);
@@ -166,7 +169,6 @@ const Admin = ({navigation}) => {
           }
         setQuizTitle('');
         setQuestions([{ question: '', options: ['', '', '', ''], correctOption: '' }]);
-        alert('Quiz saved successfully');
       } catch (error) {
         console.error(error);
         alert('Failed to save quiz');
