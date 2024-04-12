@@ -7,7 +7,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import { AntDesign,MaterialIcons } from '@expo/vector-icons';
 
 
-const sqldb = SQLite.openDatabase('quiz.db');
+
 
 const AdminHome = ({navigation}) => {
     const [quizzes, setQuizzes] = useState([]);
@@ -39,6 +39,7 @@ const AdminHome = ({navigation}) => {
       };
 
       const fetchQuizzesOffline = () => {
+        const sqldb = SQLite.openDatabase('quiz.db');
         return new Promise((resolve, reject) => {
           sqldb.transaction((transaction) => {
             transaction.executeSql(
@@ -59,6 +60,7 @@ const AdminHome = ({navigation}) => {
               }
             );
           });
+        
         });
       };
       const handleDelete=async(quizId)=>{
@@ -74,7 +76,11 @@ const AdminHome = ({navigation}) => {
         navigation.navigate('Update', { quizId });
       };
       const handleRefresh = () => {
+        if(netInfo.isConnected){
         fetchQuizzes();
+        }else{
+          fetchQuizzesOffline();
+        }
       };
 
       const renderQuizItem = ({ item }) => (  

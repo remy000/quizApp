@@ -21,9 +21,9 @@ const Admin = ({navigation}) => {
    
     useEffect(() => {
       setUpDatabase();
-       if(netInfo.isConnected){
+       if(netInfo.isInternetReachable){
         syncOfflineQuizzes();
-      }
+      } 
     }, [netInfo.isConnected]);
 
 
@@ -68,7 +68,7 @@ const Admin = ({navigation}) => {
             });
     };
 
-    const saveQuizOffline = async (quiz) => {
+    const saveQuizOffline = async(quiz) => {
             try {
               sqldb.transaction(tx => {
                 tx.executeSql(
@@ -91,7 +91,11 @@ const Admin = ({navigation}) => {
                     alert('Quiz saved successfully in SQLite');
                   },
                   (_, error) => {
-                    console.error('Failed to save quiz:', error);
+                    if (e.getMessage().contains("database is locked")) {
+                      // Retry the operation after a delay
+                      Thread.sleep(100); // Adjust delay as needed
+                      // Retry the operation
+                  } 
                   }
                 );
               });
@@ -161,14 +165,17 @@ const Admin = ({navigation}) => {
             alert('Please fill out all questions and options');
             return;
           }
-          if(netInfo.isConnected){
-          await saveQuizOnline({ title: quizTitle, questions });
+          if(netInfo.isInternetReachable){
+           await saveQuizOnline({ title: quizTitle, questions });
+      
           }
           else{
             await saveQuizOffline({title:quizTitle,questions});
+            // navigation.navigate('Home');
           }
         setQuizTitle('');
         setQuestions([{ question: '', options: ['', '', '', ''], correctOption: '' }]);
+       
       } catch (error) {
         console.error(error);
         alert('Failed to save quiz');

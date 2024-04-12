@@ -38,11 +38,12 @@ export default NotificationScreen;
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: 10,
+        top: 7,
         left: 20,
         right: 20,
-        backgroundColor: 'rgba(0, 0, 61, 0.8)',
-        padding: 10,
+        backgroundColor: 'rgb(0, 0, 61)',
+        paddingTop: 20,
+        paddingHorizontal:20,
         borderRadius: 8,
         zIndex: 999,
       },

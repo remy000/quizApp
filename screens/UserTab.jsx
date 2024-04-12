@@ -1,10 +1,10 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import UserHome from './UserHome';
-import QuizTaker from './QuizTaker';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import QuizList from './QuizList';
+import Location from './Location';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +33,15 @@ const UserTab = () => {
         ),
         headerShown: false,
       }}
+    
+    />
+    <Tab.Screen name='location' component={Location}
+    options={{
+      tabBarIcon:()=>(
+        <Entypo name="location" size={30} color="blue" />
+      ),
+      
+    }}
     
     />
 

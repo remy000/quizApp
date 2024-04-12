@@ -8,7 +8,7 @@ import {AppState} from 'react-native'
 const SessionManager = ({children}) => {
   const [user, setUser] = useState(null);
   const navigation = useNavigation();
-  const SESSION_TIMEOUT_DURATION = 2 * 60 * 1000;
+  const SESSION_TIMEOUT_DURATION = 60 * 60 * 1000;
   let backgroundTimer = null;
 
   useEffect(() => {
