@@ -14,7 +14,6 @@ const AdminTab = () => {
    options={{
     activeTintColor: '#00563B',
     inactiveTintColor: 'gray',
-
    }}
    >
     <Tab.Screen name='home' component={AdminHome}
